@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guia Acessível — Dicionário Inclusivo</title>
+
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── RESET & BASE ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal:        #0F7B6C;
+      --teal-light:  #12A08A;
+      --teal-subtle: #E6F4F2;
+      --amber:       #F59E0B;
+      --amber-subtle:#FEF9EC;
+      --ink:         #0E1A16;
+      --ink-mid:     #3D5650;
+      --ink-soft:    #7B9990;
+      --surface:     #FFFFFF;
+      --bg:          #F3F8F7;
+      --border:      #D6E8E5;
+      --danger:      #DC2626;
+      --danger-bg:   #FEE2E2;
+      --radius-sm:   10px;
+      --radius:      16px;
+      --radius-lg:   24px;
+      --shadow-sm:   0 1px 4px rgba(15,123,108,.08);
+      --shadow:      0 4px 20px rgba(15,123,108,.12);
+      --shadow-lg:   0 12px 40px rgba(15,123,108,.16);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ── UTILS ── */
+    .hidden { display: none !important; }
+
+    /* ── TOPO DECORATIVO ── */
+    .top-bar {
+      height: 4px;
+      background: linear-gradient(90deg, var(--teal) 0%, var(--teal-light) 50%, var(--amber) 100%);
+    }
+
+    /* ── LAYOUT WRAPPER ── */
+    .app-shell {
+      min-height: calc(100vh - 4px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    .app-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--teal) 0%, var(--teal-light) 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .logo-icon svg { width: 20px; height: 20px; fill: white; }
+
+    .logo-name {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--ink);
+      letter-spacing: -.02em;
+    }
+
+    .logo-name span { color: var(--teal); }
+
+    .header-right { display: flex; align-items: center; gap: 12px; }
+
+    .badge-user {
+      background: var(--teal-subtle);
+      color: var(--teal);
+      font-size: .75rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 99px;
+    }
+
+    /* ── MAIN ── */
+    .main-content {
+      flex: 1;
+      padding: 40px 24px 60px;
+      max-width: 960px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* ── HERO (tela inicial pré-login) ── */
+    .hero {
+      text-align: center;
+      padding: 20px 0 48px;
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--teal-subtle);
+      color: var(--teal);
+      font-size: .78rem;
+      font-weight: 600;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 99px;
+      margin-bottom: 20px;
+    }
+
+    .hero-title {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -.03em;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    .hero-title em {
+      font-style: normal;
+      color: var(--teal);
+    }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--ink-mid);
+      max-width: 440px;
+      margin: 0 auto 36px;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow);
+    }
+
+    .card-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    /* ── FORM ELEMENTS ── */
+    .field { margin-bottom: 16px; }
+
+    .field label {
+      display: block;
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--ink-mid);
+      margin-bottom: 6px;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: .95rem;
+      color: var(--ink);
+      background: var(--surface);
+      transition: border-color .18s, box-shadow .18s;
+      outline: none;
+      resize: vertical;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(15,123,108,.12);
+    }
+
+    .field textarea { min-height: 88px; }
+
+    /* ── BOTÕES ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: .95rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: background .18s, transform .1s, box-shadow .18s;
+      text-decoration: none;
+    }
+
+    .btn:active { transform: scale(.97); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--teal) 0%, var(--teal-light) 100%);
+      color: white;
+      width: 100%;
+      box-shadow: 0 4px 16px rgba(15,123,108,.28);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 6px 24px rgba(15,123,108,.36);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--teal);
+      border: 1.5px solid var(--teal);
+      width: 100%;
+    }
+
+    .btn-outline:hover { background: var(--teal-subtle); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink-soft);
+      font-size: .88rem;
+      padding: 8px 14px;
+    }
+
+    .btn-ghost:hover { color: var(--danger); background: var(--danger-bg); }
+
+    .btn-danger-sm {
+      background: transparent;
+      color: var(--danger);
+      font-size: .8rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border: 1px solid var(--danger-bg);
+      border-radius: 8px;
+    }
+
+    .btn-danger-sm:hover { background: var(--danger-bg); }
+
+    .btn-sm {
+      padding: 8px 16px;
+      font-size: .85rem;
+    }
+
+    .btn:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ── SPINNER ── */
+    .spinner {
+      width: 18px; height: 18px;
+      border: 2.5px solid rgba(255,255,255,.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── TOAST / MENSAGEM ── */
+    .msg {
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      font-size: .88rem;
+      font-weight: 500;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .msg-error { background: var(--danger-bg); color: var(--danger); }
+    .msg-success { background: var(--teal-subtle); color: var(--teal); }
+
+    /* ── TELA LOGIN / CADASTRO ── */
+    .auth-wrap {
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0;
+      color: var(--ink-soft);
+      font-size: .8rem;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .hint-text {
+      font-size: .78rem;
+      color: var(--ink-soft);
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    /* ── TELA HOME — BUSCA ── */
+    .search-hero {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .search-hero-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    .search-hero-sub {
+      color: var(--ink-soft);
+      font-size: .93rem;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+      max-width: 580px;
+      margin: 0 auto 40px;
+    }
+
+    .search-box input {
+      flex: 1;
+      padding: 14px 20px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      color: var(--ink);
+      background: var(--surface);
+      outline: none;
+      transition: border-color .18s, box-shadow .18s;
+    }
+
+    .search-box input:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(15,123,108,.12);
+    }
+
+    .search-box .btn {
+      width: auto;
+      padding: 14px 24px;
+      flex-shrink: 0;
+    }
+
+    /* ── RESULTADO ── */
+    .result-card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      animation: fadeUp .3s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-header {
+      padding: 24px 28px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .result-category {
+      display: inline-block;
+      background: var(--teal-subtle);
+      color: var(--teal);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 99px;
+      margin-bottom: 10px;
+    }
+
+    .result-termo {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+
+    .result-body { padding: 24px 28px; display: grid; gap: 16px; }
+
+    .result-section { display: grid; gap: 6px; }
+
+    .result-section-label {
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+
+    .result-section-text {
+      font-size: .97rem;
+      color: var(--ink-mid);
+      line-height: 1.65;
+    }
+
+    .result-tip {
+      background: var(--amber-subtle);
+      border-left: 3px solid var(--amber);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 14px 18px;
+    }
+
+    .result-tip .result-section-label { color: #92400E; }
+    .result-tip .result-section-text  { color: #78350F; }
+
+    .result-assimil {
+      background: var(--teal-subtle);
+      border-left: 3px solid var(--teal);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 14px 18px;
+    }
+
+    .result-assimil .result-section-label { color: var(--teal); }
+    .result-assimil .result-section-text  { color: var(--ink-mid); }
+
+    .result-img {
+      width: 100%;
+      max-height: 240px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      margin-top: 4px;
+    }
+
+    .multi-results-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    /* ── PAINEL MASTER ── */
+    .master-grid {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    @media (max-width: 760px) {
+      .master-grid { grid-template-columns: 1fr; }
+    }
+
+    .panel-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .panel-title-icon {
+      width: 28px; height: 28px;
+      background: var(--teal-subtle);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .9rem;
+    }
+
+    /* lista de termos master */
+    .termos-list { display: grid; gap: 1px; background: var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+
+    .termo-item {
+      background: var(--surface);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: background .15s;
+    }
+
+    .termo-item:hover { background: var(--bg); }
+
+    .termo-item-name { font-weight: 600; font-size: .92rem; color: var(--ink); }
+    .termo-item-cat  { font-size: .75rem; color: var(--ink-soft); margin-top: 2px; }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--ink-soft);
+    }
+
+    .empty-state svg { opacity: .25; margin-bottom: 14px; }
+    .empty-state p { font-size: .92rem; }
+
+    /* ── FOOTER ── */
+    .app-footer {
+      text-align: center;
+      padding: 24px;
+      font-size: .78rem;
+      color: var(--ink-soft);
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .main-content { padding: 24px 16px 48px; }
+      .card { padding: 24px 20px; }
+      .search-box { flex-direction: column; }
+      .result-header, .result-body { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra colorida de topo -->
+  <div class="top-bar"></div>
+
+  <div class="app-shell">
+
+    <!-- ── HEADER ── -->
+    <header class="app-header">
+      <a href="#" class="logo" onclick="return false;">
+        <div class="logo-icon">
+          <!-- Ícone acessibilidade -->
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm-1 5h2l1 4 3 1-1 2-3-1v6h-2v-4h-1v4H8v-6l-3 1-1-2 3-1 1-4z"/>
+          </svg>
+        </div>
+        <span class="logo-name">Guia<span>Acessível</span></span>
+      </a>
+
+      <div class="header-right" id="headerRight">
+        <!-- preenchido via JS -->
+      </div>
+    </header>
+
+    <!-- ── MAIN ── -->
+    <main class="main-content">
+
+      <!-- ═══════════════════════════════════════════
+           TELA 1: HERO + LOGIN
+      ═══════════════════════════════════════════ -->
+      <div id="screenLogin">
+
+        <div class="hero">
+          <div class="hero-pill">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 3a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm0 14.2A7.2 7.2 0 0 1 6 16c.03-2 4-3.1 6-3.1s5.97 1.1 6 3.1a7.2 7.2 0 0 1-6 3.2z"/></svg>
+            Dicionário Inclusivo
+          </div>
+          <h1 class="hero-title">Compreenda o mundo<br/>da <em>acessibilidade</em></h1>
+          <p class="hero-sub">Termos, conceitos e dicas práticas sobre inclusão, neurodiversidade e tecnologia assistiva — para quem quer entender e agir.</p>
+        </div>
+
+        <div class="auth-wrap">
+          <div class="card">
+            <p class="card-title">Acessar plataforma</p>
+
+            <div id="loginMsg"></div>
+
+            <div class="field">
+              <label for="loginEmail">E-mail</label>
+              <input type="email" id="loginEmail" placeholder="seu@email.com" autocomplete="email" />
+            </div>
+            <div class="field">
+              <label for="loginSenha">Senha</label>
+              <input type="password" id="loginSenha" placeholder="••••••" autocomplete="current-password" />
+            </div>
+
+            <button class="btn btn-primary" id="btnLogin">
+              Entrar
+            </button>
+
+            <div class="divider">ou</div>
+
+            <button class="btn btn-outline" id="btnIrCadastro">
+              Criar conta gratuita
+            </button>
+
+            <p class="hint-text">Admin: admin@guiaacessivel.com · 123456</p>
+          </div>
+        </div>
+
+      </div><!-- /screenLogin -->
+
+
+      <!-- ═══════════════════════════════════════════
+           TELA 2: CADASTRO
+      ═══════════════════════════════════════════ -->
+      <div id="screenCadastro" class="hidden">
+        <div class="auth-wrap">
+          <div class="card">
+            <p class="card-title">Criar conta</p>
+
+            <div id="cadastroMsg"></div>
+
+            <div class="field">
+              <label for="cadNome">Nome completo</label>
+              <input type="text" id="cadNome" placeholder="Seu nome" autocomplete="name" />
+            </div>
+            <div class="field">
+              <label for="cadEmail">E-mail</label>
+              <input type="email" id="cadEmail" placeholder="seu@email.com" autocomplete="email" />
+            </div>
+            <div class="field">
+              <label for="cadSenha">Senha <span style="font-weight:400;color:var(--ink-soft)">(mínimo 6 caracteres)</span></label>
+              <input type="password" id="cadSenha" placeholder="••••••" autocomplete="new-password" />
+            </div>
+
+            <button class="btn btn-primary" id="btnSalvarCadastro">Criar conta</button>
+
+            <div class="divider">ou</div>
+
+            <button class="btn btn-outline" id="btnVoltarLogin">Já tenho conta — Entrar</button>
+          </div>
+        </div>
+      </div><!-- /screenCadastro -->
+
+
+      <!-- ═══════════════════════════════════════════
+           TELA 3: HOME (USUÁRIO COMUM)
+      ═══════════════════════════════════════════ -->
+      <div id="screenHome" class="hidden">
+
+        <div class="search-hero">
+          <h2 class="search-hero-title">O que você quer entender hoje?</h2>
+          <p class="search-hero-sub">Pesquise um termo, condição, tecnologia ou conceito de inclusão.</p>
+        </div>
+
+        <div class="search-box">
+          <input type="text" id="buscaInput" placeholder="Ex: TEA, Libras, capacitismo…" autocomplete="off" />
+          <button class="btn btn-primary" id="btnBuscar" style="width:auto">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="white" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>
+            Buscar
+          </button>
+        </div>
+
+        <div id="buscaMsg"></div>
+        <div id="resultadoArea"></div>
+
+      </div><!-- /screenHome -->
+
+
+      <!-- ═══════════════════════════════════════════
+           TELA 4: PAINEL MASTER (ADMIN)
+      ═══════════════════════════════════════════ -->
+      <div id="screenMaster" class="hidden">
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px;">
+          <div>
+            <h2 style="font-family:'Sora',sans-serif;font-size:1.4rem;font-weight:800;color:var(--ink);letter-spacing:-.02em;">Painel do Administrador</h2>
+            <p style="color:var(--ink-soft);font-size:.88rem;margin-top:2px;">Gerencie os termos do dicionário</p>
+          </div>
+        </div>
+
+        <div class="master-grid">
+
+          <!-- Coluna ESQUERDA: formulário -->
+          <div class="card" style="padding:24px;">
+            <div class="panel-title">
+              <div class="panel-title-icon">➕</div>
+              Novo Termo
+            </div>
+
+            <div id="masterFormMsg"></div>
+
+            <div class="field">
+              <label for="fTermo">Termo *</label>
+              <input type="text" id="fTermo" placeholder="Ex: TEA, Libras, Autismo…" />
+            </div>
+            <div class="field">
+              <label for="fCategoria">Categoria</label>
+              <input type="text" id="fCategoria" placeholder="Ex: Neurodiversidade, Social…" />
+            </div>
+            <div class="field">
+              <label for="fSignificado">Significado *</label>
+              <textarea id="fSignificado" placeholder="Explique o que é o termo…"></textarea>
+            </div>
+            <div class="field">
+              <label for="fAplicacao">Dica de aplicação</label>
+              <textarea id="fAplicacao" placeholder="Como aplicar na prática?"></textarea>
+            </div>
+            <div class="field">
+              <label for="fAssimilacao">Dica de assimilação</label>
+              <textarea id="fAssimilacao" placeholder="Como a pessoa assimila?"></textarea>
+            </div>
+
+            <div class="field">
+              <label for="fImagem">Imagem (opcional)</label>
+              <input type="file" id="fImagem" accept="image/*" style="padding:8px;font-size:.85rem;" />
+            </div>
+
+            <button class="btn btn-primary" id="btnSalvarTermo" style="margin-top:4px;">
+              Salvar termo
+            </button>
+
+            <!-- Formulário de edição (oculto por padrão) -->
+            <div id="editFormWrap" class="hidden" style="margin-top:28px;padding-top:24px;border-top:1px solid var(--border);">
+              <div class="panel-title">
+                <div class="panel-title-icon">✏️</div>
+                Editando: <span id="editNomeLabel" style="color:var(--teal);font-weight:700;"></span>
+              </div>
+              <input type="hidden" id="editId" />
+              <div class="field">
+                <label for="eTermo">Termo *</label>
+                <input type="text" id="eTermo" />
+              </div>
+              <div class="field">
+                <label for="eCategoria">Categoria</label>
+                <input type="text" id="eCategoria" />
+              </div>
+              <div class="field">
+                <label for="eSignificado">Significado *</label>
+                <textarea id="eSignificado"></textarea>
+              </div>
+              <div class="field">
+                <label for="eAplicacao">Dica de aplicação</label>
+                <textarea id="eAplicacao"></textarea>
+              </div>
+              <div class="field">
+                <label for="eAssimilacao">Dica de assimilação</label>
+                <textarea id="eAssimilacao"></textarea>
+              </div>
+              <div style="display:flex;gap:10px;margin-top:4px;">
+                <button class="btn btn-primary" id="btnSalvarEdicao" style="flex:1;">Salvar edição</button>
+                <button class="btn btn-outline" id="btnCancelarEdicao" style="flex:1;width:auto;">Cancelar</button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Coluna DIREITA: lista -->
+          <div class="card" style="padding:24px;">
+            <div class="panel-title">
+              <div class="panel-title-icon">📚</div>
+              Termos cadastrados
+              <span id="termosCount" style="margin-left:auto;background:var(--teal-subtle);color:var(--teal);font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:99px;"></span>
+            </div>
+
+            <div id="masterMsg"></div>
+            <div id="listaTermos">
+              <!-- preenchido via JS -->
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /screenMaster -->
+
+    </main>
+
+    <!-- ── FOOTER ── -->
+    <footer class="app-footer">
+      Guia Acessível © 2025 · Dicionário Inclusivo
+    </footer>
+
+  </div><!-- /app-shell -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       JAVASCRIPT
+  ══════════════════════════════════════════════════════ -->
+  <script>
+    // ──────────────────────────────────────────
+    // CONFIGURAÇÃO SUPABASE
+    // ──────────────────────────────────────────
+    const SUPABASE_URL      = 'https://ecidvrmrcpjmhieztdpo.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjaWR2cm1yY3BqbWhpZXp0ZHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwNDI1NTYsImV4cCI6MjA5NjYxODU1Nn0.0pNLW2C6IGcVzRhxa0wAiyj54F1_Lxi4V4wLsM2Qi94';
+
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let usuarioAtual = null;
+
+    // ──────────────────────────────────────────
+    // NAVEGAÇÃO ENTRE TELAS
+    // ──────────────────────────────────────────
+    const screens = ['screenLogin', 'screenCadastro', 'screenHome', 'screenMaster'];
+
+    function mostrar(id) {
+      screens.forEach(s => {
+        const el = document.getElementById(s);
+        if (el) el.classList.toggle('hidden', s !== id);
+      });
+    }
+
+    // ──────────────────────────────────────────
+    // HEADER DINÂMICO
+    // ──────────────────────────────────────────
+    function atualizarHeader(user) {
+      const hr = document.getElementById('headerRight');
+      if (!user) { hr.innerHTML = ''; return; }
+
+      const nome = user.user_metadata?.nome || user.email.split('@')[0];
+      const isMaster = user.user_metadata?.role === 'master';
+
+      hr.innerHTML = `
+        <span class="badge-user">${isMaster ? '👑 Admin' : '👤 ' + nome}</span>
+        <button class="btn btn-ghost" id="btnLogout">Sair</button>
+      `;
+      document.getElementById('btnLogout').addEventListener('click', fazerLogout);
+    }
+
+    // ──────────────────────────────────────────
+    // MENSAGENS DE FEEDBACK
+    // ──────────────────────────────────────────
+    function showMsg(id, texto, tipo = 'error') {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.innerHTML = `<div class="msg msg-${tipo}">${texto}</div>`;
+      if (tipo === 'success') setTimeout(() => { el.innerHTML = ''; }, 3500);
+    }
+
+    function clearMsg(id) {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = '';
+    }
+
+    // ──────────────────────────────────────────
+    // AUTH: LOGIN
+    // ──────────────────────────────────────────
+    async function fazerLogin() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const senha = document.getElementById('loginSenha').value;
+
+      clearMsg('loginMsg');
+
+      if (!email || !senha) {
+        showMsg('loginMsg', '⚠️ Preencha e-mail e senha.'); return;
+      }
+
+      const btnEl = document.getElementById('btnLogin');
+      btnEl.disabled = true;
+      btnEl.innerHTML = '<div class="spinner"></div> Entrando…';
+
+      const { data, error } = await sb.auth.signInWithPassword({ email, password: senha });
+
+      btnEl.disabled = false;
+      btnEl.innerHTML = 'Entrar';
+
+      if (error) {
+        showMsg('loginMsg', '❌ ' + traduzirErro(error.message)); return;
+      }
+
+      usuarioAtual = data.user;
+      entrarNaSessao(data.user);
+    }
+
+    // ──────────────────────────────────────────
+    // AUTH: CADASTRO
+    // ──────────────────────────────────────────
+    async function fazerCadastro() {
+      const nome  = document.getElementById('cadNome').value.trim();
+      const email = document.getElementById('cadEmail').value.trim();
+      const senha = document.getElementById('cadSenha').value;
+
+      clearMsg('cadastroMsg');
+
+      if (!nome || !email || !senha) {
+        showMsg('cadastroMsg', '⚠️ Preencha todos os campos.'); return;
+      }
+      if (senha.length < 6) {
+        showMsg('cadastroMsg', '⚠️ A senha precisa ter no mínimo 6 caracteres.'); return;
+      }
+
+      const btnEl = document.getElementById('btnSalvarCadastro');
+      btnEl.disabled = true;
+      btnEl.innerHTML = '<div class="spinner"></div> Criando conta…';
+
+      const { error } = await sb.auth.signUp({
+        email, password: senha,
+        options: { data: { nome, role: 'user' } }
+      });
+
+      btnEl.disabled = false;
+      btnEl.innerHTML = 'Criar conta';
+
+      if (error) {
+        showMsg('cadastroMsg', '❌ ' + traduzirErro(error.message)); return;
+      }
+
+      showMsg('cadastroMsg', '✅ Conta criada! Agora faça login.', 'success');
+      setTimeout(() => {
+        mostrar('screenLogin');
+      }, 1800);
+    }
+
+    // ──────────────────────────────────────────
+    // AUTH: LOGOUT
+    // ──────────────────────────────────────────
+    async function fazerLogout() {
+      await sb.auth.signOut();
+      usuarioAtual = null;
+      atualizarHeader(null);
+      mostrar('screenLogin');
+    }
+
+    // ──────────────────────────────────────────
+    // ROTEAMENTO PÓS-LOGIN
+    // ──────────────────────────────────────────
+    function entrarNaSessao(user) {
+      usuarioAtual = user;
+      atualizarHeader(user);
+
+      if (user.user_metadata?.role === 'master') {
+        mostrar('screenMaster');
+        carregarTermos();
+      } else {
+        mostrar('screenHome');
+      }
+    }
+
+    // ──────────────────────────────────────────
+    // BUSCA (tela HOME)
+    // ──────────────────────────────────────────
+    async function buscarTermo() {
+      const q = document.getElementById('buscaInput').value.trim();
+      clearMsg('buscaMsg');
+
+      if (!q) { showMsg('buscaMsg', '⚠️ Digite algo para buscar.'); return; }
+
+      const btnEl = document.getElementById('btnBuscar');
+      btnEl.disabled = true;
+      btnEl.innerHTML = '<div class="spinner" style="border-top-color:white"></div>';
+
+      const { data, error } = await sb
+        .from('termos')
+        .select('*')
+        .ilike('termo', `%${q}%`)
+        .order('termo');
+
+      btnEl.disabled = false;
+      btnEl.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="6"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Buscar`;
+
+      const area = document.getElementById('resultadoArea');
+
+      if (error) {
+        showMsg('buscaMsg', '❌ Erro na busca: ' + error.message); return;
+      }
+
+      if (!data || data.length === 0) {
+        area.innerHTML = `
+          <div class="empty-state">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+            <p>Nenhum resultado para "<strong>${q}</strong>".<br/>Tente outro termo ou verifique a escrita.</p>
+          </div>`;
+        return;
+      }
+
+      area.innerHTML = `<div class="multi-results-grid">${data.map(t => renderResultCard(t)).join('')}</div>`;
+    }
+
+    function renderResultCard(t) {
+      const img = t.imagem_url
+        ? `<img src="${t.imagem_url}" alt="Imagem de ${t.termo}" class="result-img" loading="lazy"/>`
+        : '';
+      const cat = t.categoria
+        ? `<span class="result-category">${t.categoria}</span>`
+        : '';
+      const aplicacao = t.dica_aplicacao
+        ? `<div class="result-tip result-section">
+             <span class="result-section-label">✦ Dica de aplicação</span>
+             <p class="result-section-text">${t.dica_aplicacao}</p>
+           </div>` : '';
+      const assimil = t.dica_assimilacao
+        ? `<div class="result-assimil result-section">
+             <span class="result-section-label">🧠 Como assimila</span>
+             <p class="result-section-text">${t.dica_assimilacao}</p>
+           </div>` : '';
+
+      return `
+        <div class="result-card">
+          <div class="result-header">
+            ${cat}
+            <h3 class="result-termo">${t.termo}</h3>
+          </div>
+          <div class="result-body">
+            ${img}
+            <div class="result-section">
+              <span class="result-section-label">📖 Significado</span>
+              <p class="result-section-text">${t.significado}</p>
+            </div>
+            ${aplicacao}
+            ${assimil}
+          </div>
+        </div>`;
+    }
+
+    // ──────────────────────────────────────────
+    // MASTER: CARREGAR LISTA
+    // ──────────────────────────────────────────
+    async function carregarTermos() {
+      const lista = document.getElementById('listaTermos');
+      lista.innerHTML = '<p style="color:var(--ink-soft);font-size:.88rem;padding:12px 0;">Carregando…</p>';
+
+      const { data, error } = await sb
+        .from('termos')
+        .select('id, termo, categoria')
+        .order('termo');
+
+      if (error) {
+        showMsg('masterMsg', '❌ Erro ao carregar: ' + error.message); return;
+      }
+
+      const count = data?.length || 0;
+      document.getElementById('termosCount').textContent = count + (count === 1 ? ' termo' : ' termos');
+
+      if (count === 0) {
+        lista.innerHTML = `<div class="empty-state"><p>Nenhum termo ainda.<br/>Adicione o primeiro usando o formulário.</p></div>`;
+        return;
+      }
+
+      lista.innerHTML = `
+        <div class="termos-list">
+          ${data.map(t => `
+            <div class="termo-item">
+              <div>
+                <div class="termo-item-name">${t.termo}</div>
+                ${t.categoria ? `<div class="termo-item-cat">${t.categoria}</div>` : ''}
+              </div>
+              <div style="display:flex;gap:6px;flex-shrink:0;">
+                <button class="btn btn-danger-sm btn-sm" onclick="abrirEdicao(${t.id})">Editar</button>
+                <button class="btn btn-danger-sm btn-sm" onclick="excluirTermo(${t.id})">Excluir</button>
+              </div>
+            </div>`).join('')}
+        </div>`;
+    }
+
+    // ──────────────────────────────────────────
+    // MASTER: SALVAR NOVO TERMO
+    // ──────────────────────────────────────────
+    async function salvarTermo() {
+      const termo           = document.getElementById('fTermo').value.trim();
+      const categoria       = document.getElementById('fCategoria').value.trim();
+      const significado     = document.getElementById('fSignificado').value.trim();
+      const dica_aplicacao  = document.getElementById('fAplicacao').value.trim();
+      const dica_assimilacao= document.getElementById('fAssimilacao').value.trim();
+      const fileInput       = document.getElementById('fImagem');
+
+      clearMsg('masterFormMsg');
+
+      if (!termo || !significado) {
+        showMsg('masterFormMsg', '⚠️ Preencha ao menos Termo e Significado.'); return;
+      }
+
+      const btnEl = document.getElementById('btnSalvarTermo');
+      btnEl.disabled = true;
+      btnEl.innerHTML = '<div class="spinner"></div> Salvando…';
+
+      let imagem_url = null;
+
+      // Upload de imagem, se houver
+      if (fileInput.files && fileInput.files[0]) {
+        const file = fileInput.files[0];
+        const ext  = file.name.split('.').pop();
+        const path = `${Date.now()}.${ext}`;
+        const { error: uploadErr } = await sb.storage
+          .from('imagens-termos')
+          .upload(path, file, { cacheControl: '3600', upsert: false });
+
+        if (!uploadErr) {
+          const { data: urlData } = sb.storage.from('imagens-termos').getPublicUrl(path);
+          imagem_url = urlData?.publicUrl || null;
+        }
+      }
+
+      const { error } = await sb.from('termos').insert([{
+        termo, categoria, significado, dica_aplicacao, dica_assimilacao, imagem_url
+      }]);
+
+      btnEl.disabled = false;
+      btnEl.innerHTML = 'Salvar termo';
+
+      if (error) {
+        showMsg('masterFormMsg', '❌ Erro: ' + error.message); return;
+      }
+
+      showMsg('masterFormMsg', '✅ Termo salvo com sucesso!', 'success');
+      // limpar form
+      ['fTermo','fCategoria','fSignificado','fAplicacao','fAssimilacao'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      fileInput.value = '';
+      carregarTermos();
+    }
+
+    // ──────────────────────────────────────────
+    // MASTER: ABRIR EDIÇÃO
+    // ──────────────────────────────────────────
+    async function abrirEdicao(id) {
+      const { data, error } = await sb.from('termos').select('*').eq('id', id).single();
+      if (error || !data) { alert('Não foi possível carregar o termo.'); return; }
+
+      document.getElementById('editId').value         = data.id;
+      document.getElementById('eTermo').value         = data.termo || '';
+      document.getElementById('eCategoria').value     = data.categoria || '';
+      document.getElementById('eSignificado').value   = data.significado || '';
+      document.getElementById('eAplicacao').value     = data.dica_aplicacao || '';
+      document.getElementById('eAssimilacao').value   = data.dica_assimilacao || '';
+      document.getElementById('editNomeLabel').textContent = data.termo;
+
+      document.getElementById('editFormWrap').classList.remove('hidden');
+      document.getElementById('editFormWrap').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // ──────────────────────────────────────────
+    // MASTER: SALVAR EDIÇÃO
+    // ──────────────────────────────────────────
+    async function salvarEdicao() {
+      const id              = document.getElementById('editId').value;
+      const termo           = document.getElementById('eTermo').value.trim();
+      const categoria       = document.getElementById('eCategoria').value.trim();
+      const significado     = document.getElementById('eSignificado').value.trim();
+      const dica_aplicacao  = document.getElementById('eAplicacao').value.trim();
+      const dica_assimilacao= document.getElementById('eAssimilacao').value.trim();
+
+      if (!termo || !significado) { alert('Preencha Termo e Significado.'); return; }
+
+      const btnEl = document.getElementById('btnSalvarEdicao');
+      btnEl.disabled = true;
+      btnEl.innerHTML = '<div class="spinner"></div>';
+
+      const { error } = await sb.from('termos')
+        .update({ termo, categoria, significado, dica_aplicacao, dica_assimilacao })
+        .eq('id', id);
+
+      btnEl.disabled = false;
+      btnEl.innerHTML = 'Salvar edição';
+
+      if (error) { alert('Erro: ' + error.message); return; }
+
+      document.getElementById('editFormWrap').classList.add('hidden');
+      showMsg('masterMsg', '✅ Termo atualizado!', 'success');
+      carregarTermos();
+    }
+
+    // ──────────────────────────────────────────
+    // MASTER: EXCLUIR
+    // ──────────────────────────────────────────
+    async function excluirTermo(id) {
+      if (!confirm('Tem certeza que quer excluir este termo? Esta ação não pode ser desfeita.')) return;
+
+      const { error } = await sb.from('termos').delete().eq('id', id);
+      if (error) { alert('Erro ao excluir: ' + error.message); return; }
+
+      showMsg('masterMsg', '🗑️ Termo excluído.', 'success');
+      carregarTermos();
+    }
+
+    // ──────────────────────────────────────────
+    // TRADUÇÃO DE ERROS SUPABASE
+    // ──────────────────────────────────────────
+    function traduzirErro(msg) {
+      if (!msg) return 'Erro desconhecido.';
+      if (msg.includes('Invalid login credentials')) return 'E-mail ou senha incorretos.';
+      if (msg.includes('Email not confirmed'))        return 'Confirme seu e-mail antes de entrar.';
+      if (msg.includes('User already registered'))    return 'Este e-mail já está cadastrado.';
+      if (msg.includes('Password should be'))         return 'A senha deve ter pelo menos 6 caracteres.';
+      if (msg.includes('network'))                    return 'Problema de conexão. Verifique sua internet.';
+      return msg;
+    }
+
+    // ──────────────────────────────────────────
+    // INICIALIZAÇÃO
+    // ──────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', async () => {
+
+      // Eventos de navegação
+      document.getElementById('btnLogin')
+        .addEventListener('click', fazerLogin);
+      document.getElementById('loginSenha')
+        .addEventListener('keydown', e => { if (e.key === 'Enter') fazerLogin(); });
+
+      document.getElementById('btnIrCadastro')
+        .addEventListener('click', () => mostrar('screenCadastro'));
+      document.getElementById('btnVoltarLogin')
+        .addEventListener('click', () => mostrar('screenLogin'));
+      document.getElementById('btnSalvarCadastro')
+        .addEventListener('click', fazerCadastro);
+
+      document.getElementById('btnBuscar')
+        .addEventListener('click', buscarTermo);
+      document.getElementById('buscaInput')
+        .addEventListener('keydown', e => { if (e.key === 'Enter') buscarTermo(); });
+
+      document.getElementById('btnSalvarTermo')
+        .addEventListener('click', salvarTermo);
+      document.getElementById('btnSalvarEdicao')
+        .addEventListener('click', salvarEdicao);
+      document.getElementById('btnCancelarEdicao')
+        .addEventListener('click', () => {
+          document.getElementById('editFormWrap').classList.add('hidden');
+        });
+
+      // Verificar sessão existente
+      const { data: { session } } = await sb.auth.getSession();
+      if (session?.user) {
+        entrarNaSessao(session.user);
+      } else {
+        mostrar('screenLogin');
+      }
+
+      // Ouvir mudanças de autenticação
+      sb.auth.onAuthStateChange((_event, session) => {
+        if (!session) {
+          usuarioAtual = null;
+          atualizarHeader(null);
+          mostrar('screenLogin');
+        }
+      });
+    });
+
+    // Expor funções chamadas por onclick inline
+    window.abrirEdicao  = abrirEdicao;
+    window.excluirTermo = excluirTermo;
+  </script>
+
+</body>
+</html>

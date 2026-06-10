@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia Acessível</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        
+        <!-- LOGO -->
+        <div class="text-center mb-8">
+            <div class="w-12 h-12 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-xl mx-auto mb-2">G</div>
+            <h1 class="text-2xl font-bold text-slate-900">Guia<span class="text-indigo-600">Acessível</span></h1>
+            <p class="text-slate-400 text-sm">Dicionário inclusivo</p>
+        </div>
+
+        <!-- TELA DE LOGIN -->
+        <div id="telaLogin" class="max-w-md mx-auto bg-white rounded-xl shadow-sm p-6">
+            <h2 class="text-xl font-bold text-center mb-6">Acessar plataforma</h2>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">E-mail</label>
+                    <input type="email" id="email" class="w-full px-3 py-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Senha</label>
+                    <input type="password" id="senha" class="w-full px-3 py-2 border rounded-lg">
+                </div>
+                <button onclick="fazerLogin()" class="w-full bg-indigo-600 text-white py-2 rounded-lg">Entrar</button>
+                <button onclick="mostrarCadastro()" class="w-full border border-indigo-600 text-indigo-600 py-2 rounded-lg">Cadastrar</button>
+            </div>
+        </div>
+
+        <!-- TELA DE CADASTRO -->
+        <div id="telaCadastro" class="hidden max-w-md mx-auto bg-white rounded-xl shadow-sm p-6">
+            <h2 class="text-xl font-bold text-center mb-6">Criar conta</h2>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Nome</label>
+                    <input type="text" id="nome" class="w-full px-3 py-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">E-mail</label>
+                    <input type="email" id="emailCad" class="w-full px-3 py-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Senha (mínimo 6)</label>
+                    <input type="password" id="senhaCad" class="w-full px-3 py-2 border rounded-lg">
+                </div>
+                <button onclick="fazerCadastro()" class="w-full bg-indigo-600 text-white py-2 rounded-lg">Cadastrar</button>
+                <button onclick="mostrarLogin()" class="w-full border border-slate-300 py-2 rounded-lg">Voltar</button>
+            </div>
+        </div>
+
+        <!-- TELA HOME (BUSCA) -->
+        <div id="telaHome" class="hidden">
+            <div class="max-w-2xl mx-auto text-center mb-8">
+                <div class="flex gap-4 mb-4 justify-end">
+                    <button onclick="fazerLogout()" class="text-red-500 text-sm">Sair</button>
+                </div>
+                <input type="text" id="busca" placeholder="Digite um termo (ex: TEA)..." class="w-full px-4 py-3 border rounded-xl mb-3">
+                <button onclick="buscarTermo()" class="bg-indigo-600 text-white px-6 py-2 rounded-lg">Buscar</button>
+            </div>
+
+            <div id="resultadoBusca" class="max-w-3xl mx-auto bg-white rounded-xl p-6 hidden">
+                <!-- Resultado aparece aqui -->
+            </div>
+
+            <div id="semResultado" class="max-w-3xl mx-auto text-center text-slate-400 hidden">
+                Nenhum termo encontrado
+            </div>
+        </div>
+
+        <!-- TELA MASTER (PAINEL ADMIN) -->
+        <div id="telaMaster" class="hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold">👑 Painel Admin</h2>
+                <button onclick="fazerLogout()" class="text-red-500 text-sm">Sair</button>
+            </div>
+            
+            <div class="bg-white rounded-xl p-6 mb-6">
+                <h3 class="font-bold mb-4">➕ Novo Termo</h3>
+                <div class="grid gap-3">
+                    <input type="text" id="novoTermo" placeholder="Termo" class="p-2 border rounded">
+                    <input type="text" id="novaCategoria" placeholder="Categoria" class="p-2 border rounded">
+                    <textarea id="novoSignificado" placeholder="Significado" rows="3" class="p-2 border rounded"></textarea>
+                    <textarea id="novaDicaAplicacao" placeholder="Dica de aplicação" rows="2" class="p-2 border rounded"></textarea>
+                    <textarea id="novaDicaAssimilacao" placeholder="Dica de assimilação" rows="2" class="p-2 border rounded"></textarea>
+                    <button onclick="salvarTermo()" class="bg-indigo-600 text-white py-2 rounded">Salvar</button>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl overflow-hidden">
+                <table class="w-full text-sm">
+                    <thead class="bg-slate-50">
+                        <tr><th class="p-3 text-left">Termo</th><th class="p-3 text-left">Categoria</th><th class="p-3 text-right">Ações</th></tr>
+                    </thead>
+                    <tbody id="listaTermosAdmin"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // CONFIGURAÇÃO DO SUPABASE (SUAS CHAVES)
+        const SUPABASE_URL = 'https://ecidvrmrcpjmhieztdpo.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjaWR2cm1yY3BqbWhpZXp0ZHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwNDI1NTYsImV4cCI6MjA5NjYxODU1Nn0.0pNLW2C6IGcVzRhxa0wAiyj54F1_Lxi4V4wLsM2Qi94';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        let usuarioAtual = null;
+
+        // TESTE DE CONEXÃO
+        async function testarConexao() {
+            console.log('Testando conexão com Supabase...');
+            const { data, error } = await supabase.from('termos').select('count');
+            if (error) {
+                console.error('Erro de conexão:', error);
+                alert('Erro de conexão com o banco de dados. Verifique suas configurações.');
+            } else {
+                console.log('Conexão OK!');
+            }
+        }
+        
+        testarConexao();
+
+        // LOGIN
+        async function fazerLogin() {
+            const email = document.getElementById('email').value;
+            const senha = document.getElementById('senha').value;
+            
+            if (!email || !senha) {
+                alert('Preencha e-mail e senha');
+                return;
+            }
+            
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: senha
+            });
+            
+            if (error) {
+                alert('Erro: ' + error.message);
+                return;
+            }
+            
+            usuarioAtual = data.user;
+            const isMaster = data.user.user_metadata?.role === 'master';
+            
+            if (isMaster) {
+                document.getElementById('telaMaster').classList.remove('hidden');
+                document.getElementById('telaLogin').classList.add('hidden');
+                carregarTermosAdmin();
+            } else {
+                document.getElementById('telaHome').classList.remove('hidden');
+                document.getElementById('telaLogin').classList.add('hidden');
+            }
+        }
+        
+        // CADASTRO
+        async function fazerCadastro() {
+            const nome = document.getElementById('nome').value;
+            const email = document.getElementById('emailCad').value;
+            const senha = document.getElementById('senhaCad').value;
+            
+            if (!nome || !email || !senha) {
+                alert('Preencha todos os campos');
+                return;
+            }
+            
+            if (senha.length < 6) {
+                alert('Senha deve ter no mínimo 6 caracteres');
+                return;
+            }
+            
+            const { data, error } = await supabase.auth.signUp({
+                email: email,
+                password: senha,
+                options: {
+                    data: { nome: nome, role: 'user' }
+                }
+            });
+            
+            if (error) {
+                alert('Erro: ' + error.message);
+                return;
+            }
+            
+            alert('Cadastro realizado! Agora faça login.');
+            mostrarLogin();
+        }
+        
+        // LOGOUT
+        async function fazerLogout() {
+            await supabase.auth.signOut();
+            usuarioAtual = null;
+            document.getElementById('telaLogin').classList.remove('hidden');
+            document.getElementById('telaHome').classList.add('hidden');
+            document.getElementById('telaMaster').classList.add('hidden');
+            document.getElementById('telaCadastro').classList.add('hidden');
+        }
+        
+        // MOSTRAR TELAS
+        function mostrarCadastro() {
+            document.getElementById('telaLogin').classList.add('hidden');
+            document.getElementById('telaCadastro').classList.remove('hidden');
+        }
+        
+        function mostrarLogin() {
+            document.getElementById('telaCadastro').classList.add('hidden');
+            document.getElementById('telaLogin').classList.remove('hidden');
+        }
+        
+        // BUSCAR TERMO
+        async function buscarTermo() {
+            const busca = document.getElementById('busca').value.toLowerCase();
+            
+            if (!busca) {
+                alert('Digite um termo para buscar');
+                return;
+            }
+            
+            const { data, error } = await supabase
+                .from('termos')
+                .select('*')
+                .ilike('termo', `%${busca}%`);
+            
+            if (error) {
+                alert('Erro na busca');
+                return;
+            }
+            
+            if (data && data.length > 0) {
+                const termo = data[0];
+                document.getElementById('resultadoBusca').innerHTML = `
+                    <h3 class="text-xl font-bold text-indigo-600 mb-2">${termo.termo}</h3>
+                    <p class="text-slate-600 mb-3"><strong>Significado:</strong> ${termo.significado}</p>
+                    <div class="bg-amber-50 p-3 rounded mb-2"><strong>✨ Dica:</strong> ${termo.dica_aplicacao}</div>
+                    <div class="bg-indigo-50 p-3 rounded"><strong>🧠 Assimilação:</strong> ${termo.dica_assimilacao}</div>
+                `;
+                document.getElementById('resultadoBusca').classList.remove('hidden');
+                document.getElementById('semResultado').classList.add('hidden');
+            } else {
+                document.getElementById('resultadoBusca').classList.add('hidden');
+                document.getElementById('semResultado').classList.remove('hidden');
+            }
+        }
+        
+        // ADMIN: CARREGAR TERMOS
+        async function carregarTermosAdmin() {
+            const { data, error } = await supabase.from('termos').select('*').order('created_at', { ascending: false });
+            
+            if (error) return;
+            
+            let html = '';
+            for (const termo of data) {
+                html += `<tr><td class="p-3">${termo.termo}</td><td class="p-3">${termo.categoria || '-'}</td><td class="p-3 text-right"><button onclick="excluirTermo('${termo.id}')" class="text-red-500 text-xs">Excluir</button></td></tr>`;
+            }
+            document.getElementById('listaTermosAdmin').innerHTML = html;
+        }
+        
+        // ADMIN: SALVAR TERMO
+        async function salvarTermo() {
+            const termo = document.getElementById('novoTermo').value;
+            const categoria = document.getElementById('novaCategoria').value;
+            const significado = document.getElementById('novoSignificado').value;
+            const dica_aplicacao = document.getElementById('novaDicaAplicacao').value;
+            const dica_assimilacao = document.getElementById('novaDicaAssimilacao').value;
+            
+            if (!termo || !significado) {
+                alert('Preencha Termo e Significado');
+                return;
+            }
+            
+            const { error } = await supabase.from('termos').insert([{
+                termo, categoria, significado, dica_aplicacao, dica_assimilacao
+            }]);
+            
+            if (error) {
+                alert('Erro: ' + error.message);
+                return;
+            }
+            
+            alert('Termo adicionado!');
+            document.getElementById('novoTermo').value = '';
+            document.getElementById('novaCategoria').value = '';
+            document.getElementById('novoSignificado').value = '';
+            document.getElementById('novaDicaAplicacao').value = '';
+            document.getElementById('novaDicaAssimilacao').value = '';
+            carregarTermosAdmin();
+        }
+        
+        // ADMIN: EXCLUIR TERMO
+        async function excluirTermo(id) {
+            if (!confirm('Excluir este termo?')) return;
+            
+            const { error } = await supabase.from('termos').delete().eq('id', id);
+            if (error) {
+                alert('Erro ao excluir');
+                return;
+            }
+            carregarTermosAdmin();
+        }
+        
+        // VERIFICAR SESSÃO AO CARREGAR
+        async function verificarSessao() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                usuarioAtual = session.user;
+                const isMaster = session.user.user_metadata?.role === 'master';
+                if (isMaster) {
+                    document.getElementById('telaMaster').classList.remove('hidden');
+                    carregarTermosAdmin();
+                } else {
+                    document.getElementById('telaHome').classList.remove('hidden');
+                }
+                document.getElementById('telaLogin').classList.add('hidden');
+            }
+        }
+        
+        verificarSessao();
+    </script>
+</body>
+</html>
